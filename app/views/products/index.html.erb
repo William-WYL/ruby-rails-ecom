@@ -15,17 +15,22 @@
             <div class="card border-0 shadow-sm h-100" style="transition: transform 0.2s ease-in-out;">
 
               <!-- Product Image -->
-              <% if product.image_url.present? %>
+              <% # Check if the product has an attached image using ActiveStorage %>
+              <% if product.image.attached? %>
                 <%= link_to product_path(product), class: "text-decoration-none" do %>
-                  <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px; border-radius: 0.25rem 0.25rem 0 0;">
-                    <%= image_tag product.image_url,
+                  <div class="card-img-top bg-light d-flex align-items-center justify-content-center"
+                       style="height: 200px; border-radius: 0.25rem 0.25rem 0 0;">
+                    <% # Display the resized variant of the attached image %>
+                    <%= image_tag product.image.variant(resize_to_limit: [180, 180]),
                                   class: "img-fluid",
                                   alt: product.title,
-                                  style: "max-height: 180px; max-width: 180px; object-fit: contain;" %>
+                                  style: "object-fit: contain;" %>
                   </div>
                 <% end %>
               <% else %>
-                <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px; border-radius: 0.25rem 0.25rem 0 0;">
+                <% # Placeholder icon shown when no image is attached %>
+                <div class="card-img-top bg-light d-flex align-items-center justify-content-center"
+                     style="height: 200px; border-radius: 0.25rem 0.25rem 0 0;">
                   <i class="fas fa-image text-muted" style="font-size: 2rem;"></i>
                 </div>
               <% end %>
@@ -50,6 +55,7 @@
       </div>
 
       <!-- Pagination -->
+      <% # Render pagination controls if @products supports pagination %>
       <% if respond_to?(:paginate) %>
         <div class="row mt-5">
           <div class="col-12 d-flex justify-content-center">
@@ -76,11 +82,13 @@
 </div>
 
 <style>
+  /* Card hover effect: subtle lift and shadow */
   .card:hover {
     transform: translateY(-2px);
     box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1) !important;
   }
 
+  /* Pagination styling */
   .pagination-wrapper .pagination {
     margin-bottom: 0;
   }

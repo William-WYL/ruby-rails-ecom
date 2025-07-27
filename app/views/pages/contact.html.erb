@@ -1,0 +1,52 @@
+<div class="container-fluid bg-white min-vh-100 py-5">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+
+
+<!-- Contact Section -->
+<section class="mb-5">
+  <h2 class="text-primary font-weight-bold mb-4 border-bottom pb-2">Contact Info</h2>
+  <div class="card shadow-sm border-0 bg-light">
+    <div class="card-body p-4">
+      <%= raw @contact.content %>
+    </div>
+  </div>
+</section>
+
+<!-- About Section -->
+<section class="mb-5">
+  <h2 class="text-primary font-weight-bold mb-4 border-bottom pb-2">About Us</h2>
+  <div class="card shadow-sm border-0 bg-light">
+    <div class="card-body p-4">
+      <%= raw @about.content %>
+    </div>
+  </div>
+</section>
+
+
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .card {
+    transition: transform 0.2s ease-in-out;
+  }
+
+  .card:hover {
+    transform: translateY(-2px);
+  }
+
+  .border-primary {
+    border-color: #007bff !important;
+  }
+
+  @media (max-width: 768px) {
+    .display-4 {
+      font-size: 2.5rem;
+    }
+  }
+</style>

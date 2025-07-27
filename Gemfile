@@ -69,3 +69,6 @@ gem "kaminari-bootstrap"
 gem "image_processing", "~> 1.2"
 
 gem "rails-erd"
+gem "devise"
+gem "activeadmin"
+gem "active_storage_validations"

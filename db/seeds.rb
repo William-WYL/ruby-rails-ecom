@@ -90,3 +90,4 @@ end
 end
 
 puts "✅ Seeded #{User.count} users, #{Product.count} products, #{Order.count} orders, #{Tag.count} tags"
+AdminUser.create!(email: 'admin@example.com', password: 'password', password_confirmation: 'password') if Rails.env.development?

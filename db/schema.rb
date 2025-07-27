@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_27_004430) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_27_033525) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -54,6 +54,18 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_27_004430) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "addresses", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "province_id", null: false
+    t.string "street", null: false
+    t.string "city", null: false
+    t.string "postal_code", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["province_id"], name: "index_addresses_on_province_id"
+    t.index ["user_id"], name: "index_addresses_on_user_id"
   end
 
   create_table "admin_users", force: :cascade do |t|
@@ -101,8 +113,20 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_27_004430) do
     t.integer "quantity"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.decimal "unit_price", precision: 10, scale: 2, default: "0.0"
+    t.decimal "applied_gst", precision: 10, scale: 2, default: "0.0"
+    t.decimal "applied_pst", precision: 10, scale: 2, default: "0.0"
+    t.decimal "applied_hst", precision: 10, scale: 2, default: "0.0"
     t.index ["order_id"], name: "index_order_items_on_order_id"
     t.index ["product_id"], name: "index_order_items_on_product_id"
+  end
+
+  create_table "order_statuses", force: :cascade do |t|
+    t.bigint "order_id", null: false
+    t.string "status", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["order_id"], name: "index_order_statuses_on_order_id"
   end
 
   create_table "orders", force: :cascade do |t|
@@ -111,7 +135,35 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_27_004430) do
     t.decimal "total"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "address_id"
+    t.bigint "province_id"
+    t.decimal "subtotal", precision: 10, scale: 2, default: "0.0"
+    t.decimal "total_tax", precision: 10, scale: 2, default: "0.0"
+    t.decimal "grand_total", precision: 10, scale: 2, default: "0.0"
+    t.datetime "order_date"
+    t.index ["address_id"], name: "index_orders_on_address_id"
+    t.index ["province_id"], name: "index_orders_on_province_id"
     t.index ["user_id"], name: "index_orders_on_user_id"
+  end
+
+  create_table "pages", force: :cascade do |t|
+    t.string "slug", null: false
+    t.string "title", null: false
+    t.text "content", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["slug"], name: "index_pages_on_slug", unique: true
+  end
+
+  create_table "payments", force: :cascade do |t|
+    t.bigint "order_id", null: false
+    t.string "processor", null: false
+    t.string "processor_id", null: false
+    t.string "status", null: false
+    t.decimal "amount", precision: 10, scale: 2, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["order_id"], name: "index_payments_on_order_id"
   end
 
   create_table "product_tags", force: :cascade do |t|
@@ -131,6 +183,17 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_27_004430) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["category_id"], name: "index_products_on_category_id"
+  end
+
+  create_table "provinces", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "code", null: false
+    t.decimal "gst", precision: 5, scale: 3, default: "0.0"
+    t.decimal "pst", precision: 5, scale: 3, default: "0.0"
+    t.decimal "hst", precision: 5, scale: 3, default: "0.0"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["code"], name: "index_provinces_on_code", unique: true
   end
 
   create_table "reviews", force: :cascade do |t|
@@ -166,11 +229,17 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_27_004430) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "addresses", "provinces"
+  add_foreign_key "addresses", "users"
   add_foreign_key "categories_products", "categories"
   add_foreign_key "categories_products", "products"
   add_foreign_key "order_items", "orders"
   add_foreign_key "order_items", "products"
+  add_foreign_key "order_statuses", "orders"
+  add_foreign_key "orders", "addresses"
+  add_foreign_key "orders", "provinces"
   add_foreign_key "orders", "users"
+  add_foreign_key "payments", "orders"
   add_foreign_key "product_tags", "products"
   add_foreign_key "product_tags", "tags"
   add_foreign_key "products", "categories"

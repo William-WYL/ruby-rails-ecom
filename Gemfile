@@ -67,3 +67,5 @@ gem "httparty", "~> 0.23.1"
 gem "kaminari"
 gem "kaminari-bootstrap"
 gem "image_processing", "~> 1.2"
+
+gem "rails-erd"

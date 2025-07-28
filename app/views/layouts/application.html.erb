@@ -66,6 +66,10 @@
               <%= link_to "Users", users_path,
                   class: "nav-link font-weight-medium #{'text-primary font-weight-bold' if current_page?(users_path)}" %>
             </li>
+<li class="nav-item">
+  <%= link_to "Admin", admin_root_path,
+      class: "nav-link font-weight-medium #{'text-primary font-weight-bold' if current_page?(admin_root_path)}" %>
+</li>
           </ul>
 
           <!-- Search Form -->

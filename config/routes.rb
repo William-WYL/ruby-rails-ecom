@@ -7,9 +7,25 @@ Rails.application.routes.draw do
   )
   ActiveAdmin.routes(self)
 
+  devise_for :users, path: '', path_names: {
+    sign_in: 'login',
+    sign_out: 'logout',
+    sign_up: 'register'
+  }, skip: [:registrations]
+  
+  devise_scope :user do
+    resource :registration,
+      only: [:new, :create, :edit, :update],
+      path: 'users',
+      path_names: { new: 'register' },
+      controller: 'users/registrations',
+      as: :user_registration
+  end
+
   root "products#index"
 
-  resources :users
+  resources :users, only: [:index, :show]
+
   resources :products, only: [:index, :show]
   resources :categories
   resources :orders, only: [:index, :show]

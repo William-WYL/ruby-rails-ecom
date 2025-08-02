@@ -1,139 +1,146 @@
-<div class="container-fluid bg-white min-vh-100 py-5">
-  <div class="container">
-
-    <!-- Page Header -->
-    <div class="row mb-5">
-      <div class="col-12">
-        <div class="d-flex align-items-center justify-content-between">
-          <div>
-            <h1 class="display-4 font-weight-light text-dark mb-2">User Details</h1>
-          </div>
-          <div class="text-right">
-            <i class="fas fa-user text-muted" style="font-size: 3rem;"></i>
-          </div>
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-md-8 mx-auto">
+      <div class="card">
+        <div class="card-header bg-primary text-white">
+          <h2 class="card-title mb-0">
+            <i class="fas fa-user"></i> User Profile
+          </h2>
         </div>
-        <div class="border-bottom border-primary mt-3" style="width: 60px; height: 3px;"></div>
-      </div>
-    </div>
-
-    <!-- User Information -->
-    <div class="row mb-4">
-      <div class="col-12">
-        <div class="card border-0 shadow-sm">
-          <div class="card-body p-4">
-            <!-- User Avatar & Basic Info -->
-            <div class="row align-items-center mb-4">
-              <div class="col-auto">
-                <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center"
-                     style="width: 80px; height: 80px; font-size: 2rem;">
-                  <i class="fas fa-user"></i>
-                </div>
-              </div>
-              <div class="col">
-                <h3 class="font-weight-bold mb-1"><%= @user.name %></h3>
-                <p class="text-muted mb-0">
-                  <i class="fas fa-envelope mr-2"></i>
-                  <%= @user.email %>
-                </p>
-              </div>
+        <div class="card-body">
+          <!-- User Basic Information -->
+          <div class="row mb-4">
+            <div class="col-md-6">
+              <h5><strong>Name:</strong></h5>
+              <p class="text-muted"><%= @user.name.present? ? @user.name : "Name not provided" %></p>
             </div>
-
-            <!-- Detailed Information -->
-            <div class="row">
-              <div class="col-md-6 mb-3">
-                <div class="border-left border-primary pl-3">
-                  <small class="text-muted text-uppercase font-weight-bold" style="letter-spacing: 0.5px;">
-                    Name
-                  </small>
-                  <p class="h6 mb-0 mt-1"><%= @user.name %></p>
-                </div>
-              </div>
-              <div class="col-md-6 mb-3">
-                <div class="border-left border-primary pl-3">
-                  <small class="text-muted text-uppercase font-weight-bold" style="letter-spacing: 0.5px;">
-                    Email
-                  </small>
-                  <p class="h6 mb-0 mt-1"><%= @user.email %></p>
-                </div>
-              </div>
+            <div class="col-md-6">
+              <h5><strong>Email:</strong></h5>
+              <p class="text-muted"><%= @user.email %></p>
             </div>
           </div>
+
+          <div class="row mb-4">
+            <div class="col-md-6">
+              <h5><strong>Member Since:</strong></h5>
+              <p class="text-muted"><%= @user.created_at.strftime("%B %d, %Y") %></p>
+            </div>
+            <div class="col-md-6">
+              <h5><strong>Account Type:</strong></h5>
+              <p class="text-muted">
+                <% if @user.admin? %>
+                  <span class="badge bg-danger">Administrator</span>
+                <% else %>
+                  <span class="badge bg-success">Customer</span>
+                <% end %>
+              </p>
+            </div>
+          </div>
+
+          <!-- Address Section -->
+          <div class="mb-4">
+            <h5><strong>Address:</strong></h5>
+            <% if @user.address.present? %>
+              <div class="card bg-light">
+                <div class="card-body">
+                  <%= @user.address.street %><br>
+                  <%= @user.address.city %>, <%= @user.address.province&.name || "Province not specified" %> <%= @user.address.postal_code %>
+                </div>
+              </div>
+            <% else %>
+              <p class="text-muted">No address on file</p>
+            <% end %>
+          </div>
+
+          <!-- Orders Section -->
+          <div class="mb-4">
+            <h5><strong>Order History:</strong></h5>
+            <% if @user.orders.any? %>
+              <div class="table-responsive">
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th>Order #</th>
+                      <th>Date</th>
+                      <th>Status</th>
+                      <th>Total</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% @user.orders.order(created_at: :desc).limit(5).each do |order| %>
+                      <tr>
+                        <td>#<%= order.id %></td>
+                        <td><%= order.created_at.strftime("%m/%d/%Y") %></td>
+                        <td>
+                          <span class="badge bg-info"><%= order.status || "Pending" %></span>
+                        </td>
+                        <td>
+                          <% if order.respond_to?(:total) %>
+                            $<%= number_with_precision(order.total, precision: 2) %>
+                          <% else %>
+                            N/A
+                          <% end %>
+                        </td>
+                        <td>
+                          <%= link_to "View", order_path(order), class: "btn btn-sm btn-outline-primary" %>
+                        </td>
+                      </tr>
+                    <% end %>
+                  </tbody>
+                </table>
+                <% if @user.orders.count > 5 %>
+                  <p class="text-muted">Showing 5 most recent orders of <%= @user.orders.count %> total</p>
+                <% end %>
+              </div>
+            <% else %>
+              <p class="text-muted">No orders yet</p>
+            <% end %>
+          </div>
+
+          <!-- Reviews Section -->
+          <div class="mb-4">
+            <h5><strong>Reviews:</strong></h5>
+            <% if @user.reviews.any? %>
+              <p class="text-success">
+                <i class="fas fa-star"></i>
+                <%= pluralize(@user.reviews.count, "review") %> written
+              </p>
+              <% @user.reviews.limit(3).each do |review| %>
+                <div class="card mb-2">
+                  <div class="card-body py-2">
+                    <small class="text-muted">
+                      <% if review.respond_to?(:product) && review.product %>
+                        Review for: <%= review.product.name %>
+                      <% end %>
+                      - <%= review.created_at.strftime("%m/%d/%Y") %>
+                    </small>
+                    <% if review.respond_to?(:rating) %>
+                      <div class="text-warning">
+                        <% review.rating.times do %>★<% end %>
+                        <% (5 - review.rating).times do %>☆<% end %>
+                      </div>
+                    <% end %>
+                  </div>
+                </div>
+              <% end %>
+            <% else %>
+              <p class="text-muted">No reviews written yet</p>
+            <% end %>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="d-flex gap-2 mt-4">
+            <% if current_user == @user %>
+              <%= link_to "Edit Profile", edit_user_registration_path, class: "btn btn-primary" %>
+            <% end %>
+            <% if current_user&.admin? %>
+              <%= link_to "All Users", users_path, class: "btn btn-secondary" %>
+            <% end %>
+
+          </div>
         </div>
       </div>
     </div>
-
-    <!-- User Reviews -->
-    <div class="row mb-5">
-      <div class="col-12">
-        <h4 class="text-dark mb-3">User Reviews</h4>
-        <% if @user.reviews.any? %>
-          <ul class="list-group">
-            <% @user.reviews.each do |review| %>
-              <li class="list-group-item">
-                <strong><%= review.product.title %></strong><br>
-                Rating: <%= review.rating %> / 5<br>
-                Comment: <%= review.comment %>
-              </li>
-            <% end %>
-          </ul>
-        <% else %>
-          <p class="text-muted">This user has not posted any reviews.</p>
-        <% end %>
-      </div>
-    </div>
-
-    <!-- User Orders -->
-    <div class="row mb-5">
-      <div class="col-12">
-        <h4 class="text-dark mb-3">User Orders</h4>
-        <% if @user.orders.any? %>
-          <ul class="list-group">
-            <% @user.orders.each do |order| %>
-              <li class="list-group-item">
-                <%= link_to "Order ##{order.id}", order_path(order) %><br>
-                Placed on: <%= order.created_at.strftime("%B %d, %Y") %><br>
-                Total: $<%= order.total %>
-              </li>
-            <% end %>
-          </ul>
-        <% else %>
-          <p class="text-muted">No orders found for this user.</p>
-        <% end %>
-      </div>
-    </div>
-
-    <!-- Back Button -->
-    <div class="row">
-      <div class="col-12">
-        <%= link_to users_path, class: "btn btn-outline-primary" do %>
-          <i class="fas fa-arrow-left mr-2"></i>Back to Users
-        <% end %>
-      </div>
-    </div>
-
   </div>
 </div>
-
-<style>
-  .btn-outline-primary:hover {
-    transform: translateY(-1px);
-  }
-
-  .border-left {
-    border-left: 3px solid !important;
-  }
-
-  @media (max-width: 768px) {
-    .display-4 {
-      font-size: 2rem;
-    }
-
-    .row.align-items-center {
-      text-align: center;
-    }
-
-    .col-auto {
-      margin: 0 auto 1rem auto;
-    }
-  }
-</style>

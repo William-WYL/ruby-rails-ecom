@@ -1,0 +1,142 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header bg-primary text-white">
+          <h2 class="card-title mb-0">Edit Profile</h2>
+        </div>
+        <div class="card-body">
+          <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }, local: true) do |f| %>
+            <%= render "devise/shared/error_messages", resource: resource %>
+
+            <!-- Personal Information Section -->
+            <div class="mb-4">
+              <h5 class="text-primary mb-3">
+                <i class="fas fa-user mr-2"></i>Personal Information
+              </h5>
+              
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <%= f.label :name, class: "form-label" %>
+                  <span class="text-danger">*</span>
+                  <%= f.text_field :name, autofocus: true, class: "form-control", placeholder: "Enter your full name", required: true %>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <%= f.label :email, class: "form-label" %>
+                  <span class="text-danger">*</span>
+                  <%= f.email_field :email, autocomplete: "email", class: "form-control", placeholder: "Enter your email address", required: true %>
+                  <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+                    <small class="form-text text-info">
+                      Currently waiting confirmation for: <strong><%= resource.unconfirmed_email %></strong>
+                    </small>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+
+            <!-- Address Information Section -->
+            <div class="mb-4">
+              <h5 class="text-primary mb-3">
+                <i class="fas fa-map-marker-alt mr-2"></i>Address Information
+              </h5>
+              
+              <%= f.fields_for :address do |address_form| %>
+                <div class="row">
+                  <div class="col-12 mb-3">
+                    <%= address_form.label :street, class: "form-label" %>
+                    <span class="text-danger">*</span>
+                    <%= address_form.text_field :street, class: "form-control", placeholder: "Street address", required: true %>
+                  </div>
+                </div>
+                
+                <div class="row">
+                  <div class="col-md-6 mb-3">
+                    <%= address_form.label :city, class: "form-label" %>
+                    <span class="text-danger">*</span>
+                    <%= address_form.text_field :city, class: "form-control", placeholder: "City", required: true %>
+                  </div>
+                  <div class="col-md-3 mb-3">
+                    <%= address_form.label :province_id, "Province", class: "form-label" %>
+                    <span class="text-danger">*</span>
+                    <%= address_form.collection_select :province_id, Province.all, :id, :name, 
+                        { prompt: "Select Province" }, 
+                        { class: "form-control", required: true } %>
+                  </div>
+                  <div class="col-md-3 mb-3">
+                    <%= address_form.label :postal_code, class: "form-label" %>
+                    <span class="text-danger">*</span>
+                    <%= address_form.text_field :postal_code, class: "form-control", placeholder: "A1A 1A1", required: true %>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+
+            <!-- Password Change Section -->
+            <div class="mb-4">
+              <h5 class="text-primary mb-3">
+                <i class="fas fa-lock mr-2"></i>Change Password
+                <small class="text-muted">(leave blank if you don't want to change it)</small>
+              </h5>
+              
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <%= f.label :password, "New Password", class: "form-label" %>
+                  <%= f.password_field :password, autocomplete: "new-password", class: "form-control", placeholder: "New password" %>
+                  <% if @minimum_password_length %>
+                    <small class="form-text text-muted">
+                      <%= @minimum_password_length %> characters minimum
+                    </small>
+                  <% end %>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <%= f.label :password_confirmation, "Confirm New Password", class: "form-label" %>
+                  <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "form-control", placeholder: "Confirm new password" %>
+                </div>
+              </div>
+            </div>
+
+            <!-- Current Password Section -->
+            <div class="mb-4">
+              <h5 class="text-danger mb-3">
+                <i class="fas fa-key mr-2"></i>Confirm Changes
+              </h5>
+              
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <%= f.label :current_password, class: "form-label" %>
+                  <span class="text-danger">*</span>
+                  <small class="form-text text-muted">(we need your current password to confirm your changes)</small>
+                  <%= f.password_field :current_password, autocomplete: "current-password", class: "form-control", placeholder: "Current password", required: true %>
+                </div>
+              </div>
+            </div>
+
+            <div class="d-grid">
+              <%= f.submit "Update Profile", class: "btn btn-primary btn-lg" %>
+            </div>
+          <% end %>
+
+          <hr class="my-4">
+
+          <div class="card bg-light">
+            <div class="card-body">
+              <h5 class="card-title text-danger">Danger Zone</h5>
+              <p class="card-text">Once you delete your account, there is no going back. Please be certain.</p>
+              <%= button_to "Delete Account", registration_path(resource_name), 
+                    data: { 
+                      confirm: "Are you sure you want to delete your account? This action cannot be undone.", 
+                      turbo_confirm: "Are you sure you want to delete your account? This action cannot be undone?" 
+                    }, 
+                    method: :delete, 
+                    class: "btn btn-danger" %>
+            </div>
+          </div>
+
+          <div class="text-center mt-3">
+            <%= link_to "Back", :back, class: "btn btn-secondary" %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

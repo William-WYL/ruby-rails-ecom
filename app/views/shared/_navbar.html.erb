@@ -38,6 +38,20 @@
 
       <!-- User Authentication Links -->
       <ul class="navbar-nav ml-auto mr-3">
+        <!-- Shopping Cart Icon -->
+        <li class="nav-item">
+          <%= link_to cart_path, class: "nav-link font-weight-medium position-relative" do %>
+            <i class="fas fa-shopping-cart"></i>
+            <% if @current_cart.total_items > 0 %>
+              <span class="badge badge-danger badge-pill position-absolute" 
+                    style="top: 0; right: 8px; font-size: 0.7rem;">
+                <%= @current_cart.total_items %>
+              </span>
+            <% end %>
+            <span class="d-none d-lg-inline ml-1">Cart</span>
+          <% end %>
+        </li>
+        
         <% if user_signed_in? %>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle font-weight-medium"

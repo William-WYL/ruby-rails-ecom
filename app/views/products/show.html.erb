@@ -46,6 +46,22 @@
             <h2 class="text-primary font-weight-bold mb-0">$<%= sprintf("%.2f", @product.price) %></h2>
           </div>
 
+          <!-- Add to Cart Section -->
+          <div class="mb-4">
+            <%= form_with url: add_to_cart_path(@product.id), method: :post, local: true, class: "d-flex align-items-center" do |f| %>
+              <div class="input-group mr-3" style="max-width: 120px;">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">Qty</span>
+                </div>
+                <%= f.number_field :quantity, value: 1, min: 1, max: 99, 
+                    class: "form-control text-center" %>
+              </div>
+              <%= f.submit "Add to Cart", class: "btn btn-primary btn-lg" do %>
+                <i class="fas fa-cart-plus mr-2"></i>Add to Cart
+              <% end %>
+            <% end %>
+          </div>
+
           <!-- Category -->
           <div class="mb-4">
             <h6 class="text-muted text-uppercase font-weight-bold mb-2" style="font-size: 0.8rem; letter-spacing: 1px;">Category</h6>

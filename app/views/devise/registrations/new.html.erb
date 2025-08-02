@@ -13,9 +13,8 @@
             <!-- Personal Information Section -->
             <div class="mb-4">
               <h5 class="text-primary mb-3">
-                <i class="fas fa-user mr-2"></i>Personal Information
+                <i class="fas fa-user me-2"></i>Personal Information
               </h5>
-              
               <div class="row">
                 <div class="col-md-6 mb-3">
                   <%= f.label :name, class: "form-label" %>
@@ -33,9 +32,8 @@
             <!-- Address Information Section -->
             <div class="mb-4">
               <h5 class="text-primary mb-3">
-                <i class="fas fa-map-marker-alt mr-2"></i>Address Information
+                <i class="fas fa-map-marker-alt me-2"></i>Address Information
               </h5>
-              
               <%= f.fields_for :address do |address_form| %>
                 <div class="row">
                   <div class="col-12 mb-3">
@@ -43,9 +41,6 @@
                     <span class="text-danger">*</span>
                     <%= address_form.text_field :street, class: "form-control", placeholder: "Street address", required: true %>
                   </div>
-                </div>
-                
-                <div class="row">
                   <div class="col-md-6 mb-3">
                     <%= address_form.label :city, class: "form-label" %>
                     <span class="text-danger">*</span>
@@ -54,9 +49,9 @@
                   <div class="col-md-3 mb-3">
                     <%= address_form.label :province_id, "Province", class: "form-label" %>
                     <span class="text-danger">*</span>
-                    <%= address_form.collection_select :province_id, Province.all, :id, :name, 
-                        { prompt: "Select Province" }, 
-                        { class: "form-control", required: true } %>
+                    <%= address_form.collection_select :province_id, Province.all, :id, :name,
+                                                       { prompt: "Select Province" },
+                                                       { class: "form-control", required: true } %>
                   </div>
                   <div class="col-md-3 mb-3">
                     <%= address_form.label :postal_code, class: "form-label" %>
@@ -70,24 +65,28 @@
             <!-- Security Section -->
             <div class="mb-4">
               <h5 class="text-primary mb-3">
-                <i class="fas fa-lock mr-2"></i>Security
+                <i class="fas fa-lock me-2"></i>Security
               </h5>
-              
               <div class="row">
                 <div class="col-md-6 mb-3">
                   <%= f.label :password, class: "form-label" %>
                   <span class="text-danger">*</span>
+                  <%= f.password_field :password, autocomplete: "new-password", class: "form-control", placeholder: "Create a password", required: true %>
                   <% if @minimum_password_length %>
                     <small class="form-text text-muted">
                       (<%= @minimum_password_length %> characters minimum)
                     </small>
+                  <% else %>
+                    <small class="form-text text-muted">&nbsp;</small>
                   <% end %>
-                  <%= f.password_field :password, autocomplete: "new-password", class: "form-control", placeholder: "Create a password", required: true %>
                 </div>
+
                 <div class="col-md-6 mb-3">
                   <%= f.label :password_confirmation, "Confirm Password", class: "form-label" %>
                   <span class="text-danger">*</span>
                   <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "form-control", placeholder: "Confirm your password", required: true %>
+                  <!-- 占位符保持对齐 -->
+                  <small class="form-text text-muted">&nbsp;</small>
                 </div>
               </div>
             </div>

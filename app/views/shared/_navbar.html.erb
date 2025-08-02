@@ -26,14 +26,14 @@
           <%= link_to "About", about_path,
                       class: "nav-link font-weight-medium #{"text-primary font-weight-bold" if current_page?(about_path)}" %>
         </li>
-        <li class="nav-item">
+       <!-- <li class="nav-item">
           <%= link_to "Users", users_path,
                       class: "nav-link font-weight-medium #{"text-primary font-weight-bold" if current_page?(users_path)}" %>
-        </li>
-        <li class="nav-item">
+        </li> -->
+       <!-- <li class="nav-item">
           <%= link_to "Admin", admin_root_path,
                       class: "nav-link font-weight-medium #{"text-primary font-weight-bold" if current_page?(admin_root_path)}" %>
-        </li>
+        </li> -->
       </ul>
 
       <!-- User Authentication Links -->
@@ -43,7 +43,7 @@
           <%= link_to cart_path, class: "nav-link font-weight-medium position-relative" do %>
             <i class="fas fa-shopping-cart"></i>
             <% if @current_cart.total_items > 0 %>
-              <span class="badge badge-danger badge-pill position-absolute" 
+              <span class="badge badge-danger badge-pill position-absolute"
                     style="top: 0; right: 8px; font-size: 0.7rem;">
                 <%= @current_cart.total_items %>
               </span>
@@ -51,7 +51,7 @@
             <span class="d-none d-lg-inline ml-1">Cart</span>
           <% end %>
         </li>
-        
+
         <% if user_signed_in? %>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle font-weight-medium"
@@ -79,9 +79,9 @@
                 <i class="fas fa-edit mr-2"></i>Edit Profile
               <% end %>
               <div class="dropdown-divider"></div>
-              <%= button_to destroy_user_session_path, method: :delete, class: "dropdown-item border-0 bg-transparent text-left w-100", 
-                  style: "padding: 0.25rem 1.5rem; text-decoration: none;", 
-                  data: { confirm: "Are you sure you want to logout?" } do %>
+              <%= button_to destroy_user_session_path, method: :delete, class: "dropdown-item border-0 bg-transparent text-left w-100",
+                                                       style: "padding: 0.25rem 1.5rem; text-decoration: none;",
+                                                       data: { confirm: "Are you sure you want to logout?" } do %>
                 <i class="fas fa-sign-out-alt mr-2"></i>Logout
               <% end %>
             </div>

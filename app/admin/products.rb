@@ -17,7 +17,12 @@ ActiveAdmin.register Product do
     column :created_at
     column :updated_at
     column("Tags") { |product| product.tags.map(&:name).join(", ") }
-    actions
+
+    # Custom actions column without Delete button
+    column "Actions" do |product|
+      span link_to "View", admin_product_path(product), class: "button"
+      span link_to "Edit", edit_admin_product_path(product), class: "button"
+    end
   end
 
   filter :title
@@ -41,6 +46,15 @@ ActiveAdmin.register Product do
       row("Tags") { |product| product.tags.map(&:name).join(", ") }
       row :created_at
       row :updated_at
+    end
+
+    # Custom actions panel with Delete button
+    panel "Actions" do
+      div do
+        form_tag admin_product_path(resource), method: :delete, data: { confirm: "Are you sure you want to delete this product?" } do
+          submit_tag "Delete Product", class: "button"
+        end
+      end
     end
   end
 

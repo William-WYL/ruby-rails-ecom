@@ -25,8 +25,8 @@
                 <!-- Product Details -->
                 <div class="col-md-4">
                   <h6 class="mb-1">
-                    <%= link_to item[:product].title, product_path(item[:product]), 
-                        class: "text-decoration-none" %>
+                    <%= link_to item[:product].title, product_path(item[:product]),
+                                class: "text-decoration-none" %>
                   </h6>
                   <small class="text-muted">
                     Category: <%= item[:product].category.name %>
@@ -38,23 +38,23 @@
 
                 <!-- Quantity Controls -->
                 <div class="col-md-3">
-                  <%= form_with url: update_cart_item_path(item[:product].id), 
-                      method: :patch, local: true, class: "d-flex align-items-center" do |f| %>
+                  <%= form_with url: update_cart_item_path(item[:product].id),
+                                method: :patch, local: true, class: "d-flex align-items-center" do |f| %>
                     <div class="input-group input-group-sm" style="max-width: 120px;">
                       <div class="input-group-prepend">
-                        <button type="button" class="btn btn-outline-secondary btn-sm quantity-btn" 
+                        <button type="button" class="btn btn-outline-secondary btn-sm quantity-btn"
                                 onclick="decreaseQuantity(<%= item[:product].id %>)">
                           <i class="fas fa-minus"></i>
                         </button>
                       </div>
-                      <%= f.number_field :quantity, 
-                          value: item[:quantity], 
-                          min: 1, 
-                          class: "form-control text-center", 
-                          id: "quantity_#{item[:product].id}",
-                          onchange: "updateQuantity(#{item[:product].id})" %>
+                      <%= f.number_field :quantity,
+                                         value: item[:quantity],
+                                         min: 1,
+                                         class: "form-control text-center",
+                                         id: "quantity_#{item[:product].id}",
+                                         onchange: "updateQuantity(#{item[:product].id})" %>
                       <div class="input-group-append">
-                        <button type="button" class="btn btn-outline-secondary btn-sm quantity-btn" 
+                        <button type="button" class="btn btn-outline-secondary btn-sm quantity-btn"
                                 onclick="increaseQuantity(<%= item[:product].id %>)">
                           <i class="fas fa-plus"></i>
                         </button>
@@ -66,22 +66,22 @@
                 <!-- Subtotal and Remove -->
                 <div class="col-md-2 text-right">
                   <div class="mb-2">
-                    <strong>$<%= '%.2f' % item[:subtotal] %></strong>
+                    <strong>$<%= "%.2f" % item[:subtotal] %></strong>
                   </div>
-                  <%= button_to remove_from_cart_path(item[:product].id), 
-                      method: :delete, 
-                      class: "btn btn-outline-danger btn-sm",
-                      data: { confirm: "Remove #{item[:product].title} from cart?" } do %>
+                  <%= button_to remove_from_cart_path(item[:product].id),
+                                method: :delete,
+                                class: "btn btn-outline-danger btn-sm",
+                                data: { confirm: "Remove #{item[:product].title} from cart?" } do %>
                     <i class="fas fa-trash"></i>
                   <% end %>
                 </div>
 
                 <!-- Remove Button for Mobile -->
                 <div class="col-md-1 d-md-none text-center mt-2">
-                  <%= button_to remove_from_cart_path(item[:product].id), 
-                      method: :delete, 
-                      class: "btn btn-outline-danger btn-sm",
-                      data: { confirm: "Remove #{item[:product].title} from cart?" } do %>
+                  <%= button_to remove_from_cart_path(item[:product].id),
+                                method: :delete,
+                                class: "btn btn-outline-danger btn-sm",
+                                data: { confirm: "Remove #{item[:product].title} from cart?" } do %>
                     <i class="fas fa-trash mr-1"></i>Remove
                   <% end %>
                 </div>
@@ -90,12 +90,12 @@
 
             <div class="row mt-3">
               <div class="col-md-6">
-                <%= link_to "Continue Shopping", products_path, 
-                    class: "btn btn-outline-primary" %>
-                <%= button_to clear_cart_path, 
-                    method: :delete, 
-                    class: "btn btn-outline-danger ml-2",
-                    data: { confirm: "Clear entire cart?" } do %>
+                <%= link_to "Continue Shopping", products_path,
+                            class: "btn btn-outline-primary" %>
+                <%= button_to clear_cart_path,
+                              method: :delete,
+                              class: "btn btn-outline-danger ml-2",
+                              data: { confirm: "Clear entire cart?" } do %>
                   <i class="fas fa-trash mr-1"></i>Clear Cart
                 <% end %>
               </div>
@@ -105,8 +105,8 @@
               <i class="fas fa-shopping-cart fa-3x text-muted mb-3"></i>
               <h4 class="text-muted">Your cart is empty</h4>
               <p class="text-muted">Add some products to get started!</p>
-              <%= link_to "Browse Products", products_path, 
-                  class: "btn btn-primary" %>
+              <%= link_to "Browse Products", products_path,
+                          class: "btn btn-primary" %>
             </div>
           <% end %>
         </div>
@@ -123,17 +123,22 @@
           <% if @cart_items.any? %>
             <div class="d-flex justify-content-between mb-3">
               <span>Items (<%= @current_cart.total_items %>):</span>
-              <span>$<%= '%.2f' % @current_cart.total_price %></span>
+              <span>$<%= "%.2f" % @current_cart.total_price %></span>
             </div>
             <hr>
             <div class="d-flex justify-content-between mb-3">
               <strong>Total:</strong>
-              <strong class="text-primary">$<%= '%.2f' % @current_cart.total_price %></strong>
+              <strong class="text-primary">$<%= "%.2f" % @current_cart.total_price %></strong>
             </div>
-            <button class="btn btn-success btn-lg btn-block" disabled>
-              <i class="fas fa-lock mr-2"></i>Proceed to Checkout
-              <small class="d-block">Coming Soon</small>
-            </button>
+            <% if user_signed_in? %>
+  <%= link_to new_checkout_path, class: "btn btn-success btn-lg btn-block" do %>
+    <i class="fas fa-credit-card mr-2"></i>Proceed to Checkout
+  <% end %>
+<% else %>
+  <%= link_to new_user_session_path, class: "btn btn-primary btn-lg btn-block" do %>
+    <i class="fas fa-sign-in-alt mr-2"></i>Login to Checkout
+  <% end %>
+<% end %>
           <% else %>
             <p class="text-muted text-center">No items in cart</p>
           <% end %>
@@ -162,19 +167,19 @@ function decreaseQuantity(productId) {
 function updateQuantity(productId) {
   const quantity = document.getElementById(`quantity_${productId}`).value;
   const form = document.querySelector(`form[action*="${productId}"]`);
-  
+
   // Create a temporary form to submit the update
   const tempForm = document.createElement('form');
   tempForm.method = 'POST';
   tempForm.action = form.action;
-  
+
   // Add method field for PATCH
   const methodField = document.createElement('input');
   methodField.type = 'hidden';
   methodField.name = '_method';
   methodField.value = 'PATCH';
   tempForm.appendChild(methodField);
-  
+
   // Add CSRF token
   const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
   const csrfField = document.createElement('input');
@@ -182,14 +187,14 @@ function updateQuantity(productId) {
   csrfField.name = 'authenticity_token';
   csrfField.value = csrfToken;
   tempForm.appendChild(csrfField);
-  
+
   // Add quantity field
   const quantityField = document.createElement('input');
   quantityField.type = 'hidden';
   quantityField.name = 'quantity';
   quantityField.value = quantity;
   tempForm.appendChild(quantityField);
-  
+
   document.body.appendChild(tempForm);
   tempForm.submit();
 }

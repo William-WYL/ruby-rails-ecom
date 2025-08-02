@@ -39,7 +39,13 @@ class CartController < ApplicationController
 
   def clear
     @current_cart.clear
+    session.delete(:cart)  # Completely remove from session
     save_cart
-    redirect_to cart_path, notice: "Cart cleared!"
+    redirect_to cart_path, notice: "Your cart has been cleared."
+  end
+
+  def reset_session
+    session.delete(:cart)
+    redirect_to cart_path, notice: "Cart session has been reset."
   end
 end
